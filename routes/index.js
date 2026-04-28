@@ -11,7 +11,8 @@ var moment = require('moment');
 var exec = require('child_process').exec;
 var validator = require('validator');
 
-// hey maia is here 
+// hey maia is here lets get to work bitch
+// i need this to work now
 var fileType = require('file-type');
 var AdmZip = require('adm-zip');
 var fs = require('fs');
