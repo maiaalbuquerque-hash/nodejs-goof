@@ -1,0 +1,21 @@
+trigger:
+- master  # nodejs-goof typically uses 'master' as the main branch name
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+# Step 1: Install Node.js (Required by Snyk to scan your package.json)
+- task: UseNode@1
+  inputs:
+    versionSpec: '18.x'
+  displayName: 'Install Node.js'
+
+# Step 2: Run the Snyk Security Scan
+- task: SnykSecurityScan@1
+  inputs:
+    serviceConnection: 'Snyk-Connection' # This is the name we gave our connection earlier!
+    testType: 'app'
+    monitorWhen: 'always'
+    failOnIssues: true
+  displayName: 'Run Snyk Security Scan'
