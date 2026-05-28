@@ -19,3 +19,19 @@ steps:
     monitorWhen: 'always'
     failOnIssues: true
   displayName: 'Run Snyk Security Scan'
+
+# Only run snyk after the build steps
+- script: |
+    npm install -g snyk
+    snyk auth $(SNYK_TOKEN)
+  displayName: 'npm install snyk and authenticate'
+
+- script: |
+    snyk test 
+  displayName: 'snyk open source test'
+  continueOnError: true
+
+- script: |
+    snyk code test 
+  displayName: 'snyk code test'
+  continueOnError: true
