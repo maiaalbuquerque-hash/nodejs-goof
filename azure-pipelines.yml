@@ -18,10 +18,10 @@ steps:
     env:
       SNYK_TOKEN: $(SNYK_TOKEN)
 
-  - script: snyk code test --remote-repo-url=https://github.com/maiaalbuquerque-hash/nodejs-goof.git --severity-threshold=high
+  - script: snyk code test --remote-repo-url=https://github.com/maiaalbuquerque-hash/nodejs-goof.git --severity-threshold=high --org=dad5720b-dd1d-4159-85f7-d7c58fe11563
     displayName: 'Run Snyk Code (SAST) Test'
     continueOnError: true
 
-  - script: snyk test --severity-threshold=high
+  - script: snyk test --severity-threshold=high --org=dad5720b-dd1d-4159-85f7-d7c58fe11563
     displayName: 'Run Snyk Open Source Test'
     continueOnError: true
