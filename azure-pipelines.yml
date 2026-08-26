@@ -1,37 +1,27 @@
 trigger:
-- master  # nodejs-goof typically uses 'master' as the main branch name
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-# Step 1: Install Node.js (Required by Snyk to scan your package.json)
-- task: UseNode@1
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+  - script: npm install -g snyk
+    displayName: 'Install Snyk CLI'
 
-# Step 2: Run the Snyk Security Scan
-- task: SnykSecurityScan@1
-  inputs:
-    serviceConnectionEndpoint: 'Snyk-Connection' # This is the name we gave our connection earlier!
-    testType: 'app'
-    monitorWhen: 'always'
-    failOnIssues: false
-  displayName: 'Run Snyk Security Scan'
+  - script: snyk config environment SNYK-US-02
+    displayName: 'Set Snyk region'
 
-# Only run snyk after the build steps
-- script: |
-    npm install -g snyk
-    snyk auth $(SNYK_TOKEN)
-  displayName: 'npm install snyk and authenticate'
+  - script: snyk auth $(SNYK_TOKEN)
+    displayName: 'Authenticate Snyk'
+    env:
+      SNYK_TOKEN: $(SNYK_TOKEN)
 
-- script: |
-    snyk test 
-  displayName: 'snyk open source test'
-  continueOnError: true
+  - script: snyk code test
+    displayName: 'Run Snyk Code (SAST) Test'
+    continueOnError: true
 
-- script: |
-    snyk code test 
-  displayName: 'snyk code test'
-  continueOnError: true
+  - script: snyk test
+    displayName: 'Run Snyk Open Source Test'
+    continueOnError: true
